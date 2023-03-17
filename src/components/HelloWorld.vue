@@ -4,7 +4,7 @@
     :value="value" 
     :plugins="plugins" 
     @change="handleChange"
-    placeholder="请输入..."
+    placeholder="请输入...."
     :locale="zhHans" 
     :uploadImages="uploadImage"
     :editorConfig="editorConfig"
