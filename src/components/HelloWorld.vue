@@ -1,58 +1,80 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <Editor
+    class="bytemd"
+    :value="value" 
+    :plugins="plugins" 
+    @change="handleChange"
+    placeholder="请输入..."
+    :locale="zhHans" 
+    :uploadImages="uploadImage"
+    :editorConfig="editorConfig"
+  />
 </template>
 
 <script>
+// CSS
+import 'bytemd/dist/index.min.css'
+import 'highlight.js/styles/default.css'
+import 'katex/dist/katex.css'
+import 'juejin-markdown-themes/dist/juejin.min.css'
+
+// 中文包
+import zhHans from 'bytemd/locales/zh_Hans.json'
+import gfmLocale from '@bytemd/plugin-gfm/locales/zh_Hans.json';
+import mathLocale from '@bytemd/plugin-math/locales/zh_Hans.json';
+import mermaidLocale from '@bytemd/plugin-mermaid/locales/zh_Hans.json';
+//插件
+import breaks from '@bytemd/plugin-breaks' 
+import frontmatter from '@bytemd/plugin-frontmatter'
+import gemoji from '@bytemd/plugin-gemoji'
+import gfm from '@bytemd/plugin-gfm'
+// import highlight from '@bytemd/plugin-highlight'
+import highlight from '@bytemd/plugin-highlight-ssr'
+// import math from '@bytemd/plugin-math'
+import math from '@bytemd/plugin-math-ssr'
+import mediumZoom from '@bytemd/plugin-medium-zoom' 
+import mermaid from '@bytemd/plugin-mermaid'
+import { Editor } from '@bytemd/vue'
+
+const plugins = [
+  breaks(),
+  frontmatter(),
+  gemoji(),
+  gfm({locale: gfmLocale}),
+  highlight(),
+  math({locale: mathLocale}),
+  mediumZoom(),
+  mermaid({locale: mermaidLocale}),
+]
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  components: { Editor },
+  data() {
+    return { 
+      value: '',
+      plugins,
+      zhHans,
+      editorConfig:{
+
+      }
+    }
+  },
+  methods: {
+    handleChange(v) {
+      this.value = v
+    },
+    async uploadImage(files) {
+      console.log('files', files)
+      return [
+        {
+          title: files.map((i) => i.name),
+          url: 'http'
+        }
+      ]
+    }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
